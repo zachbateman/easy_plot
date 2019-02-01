@@ -18,10 +18,11 @@ LARGEST_FONTSIZE = 17
 BIN_ORDER = []  # list of bins so that they get ordered as desired on x axis
 
 
-def swarmplot(df):
+def swarmplot(df, ax):
     sns.set_style('whitegrid')
-    ax1.set_ylim([0, 14000])  # set ylim before plotting to ensure good swarmplot point spacing
-    ax = sns.swarmplot(x='BINS', y=RESULT_COLUMN, data=df, ax=ax1, size=4, order=BIN_ORDER)
+    ax.set_ylim([0, round(df.RESULT.max())])  # set ylim before plotting to ensure good swarmplot point spacing
+    BIN_ORDER = sorted({bin for bin in df.BINS})  # list of unique bins
+    ax = sns.swarmplot(x='BINS', y='RESULT', data=df, ax=ax, size=4, order=BIN_ORDER)
     ax.set_xlabel('')
     ax.set_ylabel(RESULT_COLUMN, fontsize=LARGEST_FONTSIZE * 0.8)
     ax.tick_params(labelsize=10)
@@ -29,7 +30,7 @@ def swarmplot(df):
     line_width = 0.6
     for tick, text in zip(ax.get_xticks(), ax.get_xticklabels()):
         bin_name = text.get_text()
-        mean = df[df.BINS == bin_name][RESULT_COLUMN].mean()
+        mean = df[df.BINS == bin_name]['RESULT'].mean()
         ax.plot([tick-line_width/2, tick+line_width/2], [mean, mean], lw=5, color='#444455')
 
     ax.text(0.05, 0.97, 'Lines Indicate Bin Mean', bbox={'facecolor': '#dfdfee', 'edgecolor': '#444455'}, fontdict={'size': LARGEST_FONTSIZE * 0.7}, transform=ax.transAxes)
@@ -44,7 +45,7 @@ def swarmplot(df):
     # plt.show()
 
 
-def dist_plot(sorted_xy_lists):
+def dist_plot(sorted_xy_lists, ax2):
 
     point_size = 14
     for i, xy_list in enumerate(sorted_xy_lists):
@@ -112,21 +113,21 @@ def make_distplot_data(data):
 
 
 
-if __name__ == '__main__':
-    data = pandas.read_excel('test.xlsx', converters={'col_1': str, 'col_2': str})
-    data = add_bins(data)
-
+def distribution_plot(df, bin_col: str='', result_col: str=''):
     fig, ax1, ax2 = create_plot_objects()
 
-    swarmplot(data)
+    df['BINS'] = df[bin_col]
+    df['RESULT'] = df[result_col]
+
+    swarmplot(df, ax1)
 
     dist_data = []
     for bin in BIN_ORDER:
-        filtered_data = data[data.BINS == bin][RESULT_COLUMN].tolist()
+        filtered_data = df[df[bin_col] == bin][result_col].tolist()
         if len(filtered_data) > 0:
             dist_data.append(make_distplot_data(filtered_data))
 
-    dist_plot(dist_data)
+    dist_plot(dist_data, ax2)
 
     tick_size = LARGEST_FONTSIZE * 0.7
     plt.setp(ax1.get_xticklabels(), fontsize=tick_size)
@@ -137,3 +138,10 @@ if __name__ == '__main__':
     fig.suptitle(PLOT_TITLE, fontsize=LARGEST_FONTSIZE, y=0.96)
     plt.subplots_adjust(left=0.08, right=0.95, bottom=0.08, top=0.90, wspace=0.10)
     plt.show()
+
+
+
+if __name__ == '__main__':
+    data = pandas.read_excel('test.xlsx', converters={'col_1': str, 'col_2': str})
+    data = add_bins(data)
+    distribution_plot(data)

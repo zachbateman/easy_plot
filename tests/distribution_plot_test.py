@@ -1,11 +1,12 @@
 import statplot
+import pandas
 
 
 def test_func():
-    # TODO
-    pass
+    df = pandas.read_csv('test_data.csv')
+    statplot.distribution_plot(df, bin_col='color', result_col='value')
+
 
 
 if __name__ == '__main__':
-    # TODO
-    pass
+    test_func()
