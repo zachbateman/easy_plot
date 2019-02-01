@@ -5,26 +5,27 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
 import seaborn as sns
-
 import pandas
 import datetime
 from pprint import pprint as pp
 
 
-PLOT_TITLE = 'TITLE'
-RESULT_COLUMN = 'result_column'
-BIN_COLUMN = 'bin_column'
+PLOT_TITLE = 'STATPLOT TITLE'
 LARGEST_FONTSIZE = 17
 BIN_ORDER = []  # list of bins so that they get ordered as desired on x axis
+
+
+def _bin_order(df):
+    return sorted({bin for bin in df.BINS})
 
 
 def swarmplot(df, ax):
     sns.set_style('whitegrid')
     ax.set_ylim([0, round(df.RESULT.max())])  # set ylim before plotting to ensure good swarmplot point spacing
-    BIN_ORDER = sorted({bin for bin in df.BINS})  # list of unique bins
+    BIN_ORDER =  _bin_order(df) # list of unique bins
     ax = sns.swarmplot(x='BINS', y='RESULT', data=df, ax=ax, size=4, order=BIN_ORDER)
     ax.set_xlabel('')
-    ax.set_ylabel(RESULT_COLUMN, fontsize=LARGEST_FONTSIZE * 0.8)
+    ax.set_ylabel('RESULT', fontsize=LARGEST_FONTSIZE * 0.8)
     ax.tick_params(labelsize=10)
 
     line_width = 0.6
@@ -48,6 +49,7 @@ def swarmplot(df, ax):
 def dist_plot(sorted_xy_lists, ax2):
 
     point_size = 14
+    upper_limit = 0
     for i, xy_list in enumerate(sorted_xy_lists):
         x, y = zip(*xy_list)
         ax2.scatter(x, y, s=point_size) #, color='r')
@@ -55,10 +57,14 @@ def dist_plot(sorted_xy_lists, ax2):
             # ax2.scatter(x, y, s=10) #, color='r')
         # if i == 1:
             # ax2.scatter(x, y, s=10) #, color='b')  # marker='l'
+        if max(x) > upper_limit:
+            upper_limit = max(x)
 
-    ax2.set_xlim([0, 10000])
-    ax2.set_xticks([2000 * i for i in range(0, 5)])
-    ax2.set_xlabel(RESULT_COLUMN, fontsize=LARGEST_FONTSIZE * 0.8)
+    # upper_limit = max(...)
+    # upper_limit = 10000
+    ax2.set_xlim([0, upper_limit])
+    ax2.set_xticks([upper_limit / 5 * i for i in range(0, 5)])
+    ax2.set_xlabel('RESULT', fontsize=LARGEST_FONTSIZE * 0.8)
 
     ax2.yaxis.tick_right()
     ax2.set_yticks([i / 10 for i in range(1, 10)])  # arg needs to be a list
@@ -109,7 +115,7 @@ def create_plot_objects():
 
 
 def make_distplot_data(data):
-    return [(val, (i+1)/len(sorted_data)) for i, val in enumerate(sorted(data))]
+    return [(val, (i+1)/len(data)) for i, val in enumerate(sorted(data))]
 
 
 
@@ -122,7 +128,7 @@ def distribution_plot(df, bin_col: str='', result_col: str=''):
     swarmplot(df, ax1)
 
     dist_data = []
-    for bin in BIN_ORDER:
+    for bin in _bin_order(df):
         filtered_data = df[df[bin_col] == bin][result_col].tolist()
         if len(filtered_data) > 0:
             dist_data.append(make_distplot_data(filtered_data))
