@@ -21,9 +21,11 @@ def _bin_order(df):
 
 def swarmplot(df, ax):
     sns.set_style('whitegrid')
-    ax.set_ylim([0, round(df.RESULT.max())])  # set ylim before plotting to ensure good swarmplot point spacing
+    ax.set_ylim([0, round(_get_upper_bound(df.RESULT.max()))])  # set ylim before plotting to ensure good swarmplot point spacing
     BIN_ORDER =  _bin_order(df) # list of unique bins
-    ax = sns.swarmplot(x='BINS', y='RESULT', data=df, ax=ax, size=4, order=BIN_ORDER)
+
+    point_size = 75 / (len(df) / len(set(df['BINS'])))
+    ax = sns.swarmplot(x='BINS', y='RESULT', data=df, ax=ax, size=point_size, order=BIN_ORDER)
     ax.set_xlabel('')
     ax.set_ylabel('RESULT', fontsize=LARGEST_FONTSIZE * 0.8)
     ax.tick_params(labelsize=10)
@@ -48,8 +50,8 @@ def swarmplot(df, ax):
 
 def dist_plot(sorted_xy_lists, ax2):
 
-    point_size = 14
-    upper_limit = 0
+    point_size = 400 / (len([val for xy_list in sorted_xy_lists for val in xy_list]) / len(sorted_xy_lists))
+    max_x = 0
     for i, xy_list in enumerate(sorted_xy_lists):
         x, y = zip(*xy_list)
         ax2.scatter(x, y, s=point_size) #, color='r')
@@ -57,11 +59,9 @@ def dist_plot(sorted_xy_lists, ax2):
             # ax2.scatter(x, y, s=10) #, color='r')
         # if i == 1:
             # ax2.scatter(x, y, s=10) #, color='b')  # marker='l'
-        if max(x) > upper_limit:
-            upper_limit = max(x)
+        max_x = max(x) if max(x) > max_x else max_x
 
-    # upper_limit = max(...)
-    # upper_limit = 10000
+    upper_limit = _get_upper_bound(max_x)
     ax2.set_xlim([0, upper_limit])
     ax2.set_xticks([upper_limit / 5 * i for i in range(0, 5)])
     ax2.set_xlabel('RESULT', fontsize=LARGEST_FONTSIZE * 0.8)
@@ -93,6 +93,16 @@ def dist_plot(sorted_xy_lists, ax2):
             legend.legendHandles[index]._sizes = [point_size]  # specifies size of legend marker
         except:
             pass
+
+
+def _get_upper_bound(num):
+    '''Return half way or all the way to next highest "order of magnitude" number'''
+    for mag_order in range(0, 10):
+        if num <= 0.5 * (10 ** mag_order):
+            return 0.5 * (10 ** mag_order)
+        elif num <= 10 ** mag_order:
+            return 10 ** mag_order
+
 
 
 def add_bins(df):
