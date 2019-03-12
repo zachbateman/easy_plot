@@ -5,11 +5,34 @@ Utilizes pandas dataframes as standard format for input data.
 
 # Current Features
 
-  - statplot.TODO()
-    - TODO
-    - Usage TODO:
+  - statplot.distribution_plot(df)
+    - Plot a "Distribution Plot": a swarmplot alongside a cumulative probability plot.
+    - Usage:
         ```sh
-        TODO code
+        import pandas
+        import statplot
+        df = pandas.read_csv('test.csv')
+        statplot.distribution_plot(df)
+        ```
+
+  - statplot.scatterplot_matrix_plot(df)
+    - Plot a matrix of scatterplots.
+    - Usage:
+        ```sh
+        import pandas
+        import statplot
+        df = pandas.read_csv('test.csv')
+        statplot.scatterplot_matrix_plot(df)
+        ```
+
+  - statplot.heatmap_plot(df)
+    - Plot a matrix of scatterplots.
+    - Usage:
+        ```sh
+        import pandas
+        import statplot
+        df = pandas.read_csv('test.csv')
+        statplot.heatmap_plot(df)
         ```
 
 
