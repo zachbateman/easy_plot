@@ -16,6 +16,6 @@ def pca_screeplot(df):
     x = numpy.arange(len(y)) + 1
 
     plt.plot(x, y, 'o-')
-    plt.xticks(x, df.columns, rotation=60)
+    plt.xticks(x, [f'Component {i}' for i in range(x)], rotation=60)
     plt.ylabel('Variance')
     plt.show()
