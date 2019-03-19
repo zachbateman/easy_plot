@@ -24,7 +24,7 @@ def swarmplot(df, ax):
     ax.set_ylim([0, round(_get_upper_bound(df.RESULT.max()))])  # set ylim before plotting to ensure good swarmplot point spacing
     BIN_ORDER =  _bin_order(df) # list of unique bins
 
-    point_size = 75 / (len(df) / len(set(df['BINS'])))
+    point_size = 80 / (len(df) / len(set(df['BINS']))) ** 0.6
     ax = sns.swarmplot(x='BINS', y='RESULT', data=df, ax=ax, size=point_size, order=BIN_ORDER)
     ax.set_xlabel('')
     ax.set_ylabel('RESULT', fontsize=LARGEST_FONTSIZE * 0.8)
@@ -50,7 +50,7 @@ def swarmplot(df, ax):
 
 def dist_plot(sorted_xy_lists, ax2):
 
-    point_size = 400 / (len([val for xy_list in sorted_xy_lists for val in xy_list]) / len(sorted_xy_lists))
+    point_size = 350 / (len([val for xy_list in sorted_xy_lists for val in xy_list]) / len(sorted_xy_lists)) ** 0.6
     max_x = 0
     for i, xy_list in enumerate(sorted_xy_lists):
         x, y = zip(*xy_list)
@@ -96,12 +96,11 @@ def dist_plot(sorted_xy_lists, ax2):
 
 
 def _get_upper_bound(num):
-    '''Return half way or all the way to next highest "order of magnitude" number'''
+    '''Return part way or all the way to next highest "order of magnitude" number'''
     for mag_order in range(0, 10):
-        if num <= 0.5 * (10 ** mag_order):
-            return 0.5 * (10 ** mag_order)
-        elif num <= 10 ** mag_order:
-            return 10 ** mag_order
+        for partial in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]:
+            if num <= partial * (10 ** mag_order):
+                return partial * (10 ** mag_order)
 
 
 def add_bins(df):
