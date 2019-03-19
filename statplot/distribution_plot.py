@@ -155,7 +155,7 @@ def distribution_plot(df, bin_col: str='', result_col: str='', bin_order: list=[
     fig.suptitle(PLOT_TITLE, fontsize=LARGEST_FONTSIZE, y=0.96)
     ax1.set_ylabel(result_col)
     ax1.set_xlabel(bin_col)
-    ax2.set_xlabel(bin_col)
+    ax2.set_xlabel(result_col)
 
     plt.subplots_adjust(left=0.08, right=0.95, bottom=0.08, top=0.90, wspace=0.10)
     plt.show()
