@@ -10,24 +10,23 @@ import datetime
 from pprint import pprint as pp
 
 
-PLOT_TITLE = 'STATPLOT TITLE'
-LARGEST_FONTSIZE = 17
-BIN_ORDER = []  # list of bins so that they get ordered as desired on x axis
-
 
 def _bin_order(df):
     return sorted({bin for bin in df.BINS})
 
 
-def swarmplot(df, ax, bin_order: list=[]):
+def swarmplot(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize: int=17):
     sns.set_style('whitegrid')
-    ax.set_ylim([0, round(_get_upper_bound(df.RESULT.max()))])  # set ylim before plotting to ensure good swarmplot point spacing
+    if max_result == 0:
+        ax.set_ylim([0, round(_get_upper_bound(df.RESULT.max()))])  # set ylim before plotting to ensure good swarmplot point spacing
+    else:
+        ax.set_ylim([0, max_result])  # set ylim before plotting to ensure good swarmplot point spacing
     BIN_ORDER =  _bin_order(df) if bin_order == [] else bin_order # list of unique bins
 
     point_size = 80 / (len(df) / len(set(df['BINS']))) ** 0.6
     ax = sns.swarmplot(x='BINS', y='RESULT', data=df, ax=ax, size=point_size, order=BIN_ORDER)
     ax.set_xlabel('')
-    ax.set_ylabel('RESULT', fontsize=LARGEST_FONTSIZE * 0.8)
+    ax.set_ylabel('RESULT', fontsize=largest_fontsize * 0.8)
     ax.tick_params(labelsize=10)
 
     line_width = 0.6
@@ -36,9 +35,9 @@ def swarmplot(df, ax, bin_order: list=[]):
         mean = df[df.BINS == bin_name]['RESULT'].mean()
         ax.plot([tick-line_width/2, tick+line_width/2], [mean, mean], lw=5, color='#444455')
 
-    ax.text(0.05, 0.97, 'Lines Indicate Bin Mean', bbox={'facecolor': '#dfdfee', 'edgecolor': '#444455'}, fontdict={'size': LARGEST_FONTSIZE * 0.7}, transform=ax.transAxes)
+    ax.text(0.05, 0.97, 'Lines Indicate Bin Mean', bbox={'facecolor': '#dfdfee', 'edgecolor': '#444455'}, fontdict={'size': largest_fontsize * 0.7}, transform=ax.transAxes)
 
-    ax.set_xlabel('X Label', fontsize=LARGEST_FONTSIZE * 0.8)
+    ax.set_xlabel('X Label', fontsize=largest_fontsize * 0.8)
 
 
     def y_format(x, second_arg=None):  # idk... it is given a second arg that we don't need.
@@ -48,7 +47,7 @@ def swarmplot(df, ax, bin_order: list=[]):
     # plt.show()
 
 
-def dist_plot(sorted_xy_lists, ax2):
+def dist_plot(sorted_xy_lists, ax2, bin_order: list=[], max_result: float=0, largest_fontsize: int=17):
 
     point_size = 350 / (len([val for xy_list in sorted_xy_lists for val in xy_list]) / len(sorted_xy_lists)) ** 0.6
     max_x = 0
@@ -61,10 +60,10 @@ def dist_plot(sorted_xy_lists, ax2):
             # ax2.scatter(x, y, s=10) #, color='b')  # marker='l'
         max_x = max(x) if max(x) > max_x else max_x
 
-    upper_limit = _get_upper_bound(max_x)
+    upper_limit = _get_upper_bound(max_x) if max_result == 0 else max_result
     ax2.set_xlim([0, upper_limit])
     ax2.set_xticks([upper_limit / 5 * i for i in range(0, 5)])
-    ax2.set_xlabel('RESULT', fontsize=LARGEST_FONTSIZE * 0.8)
+    ax2.set_xlabel('RESULT', fontsize=largest_fontsize * 0.8)
 
     ax2.yaxis.tick_right()
     ax2.set_yticks([i / 10 for i in range(1, 10)])  # arg needs to be a list
@@ -78,14 +77,13 @@ def dist_plot(sorted_xy_lists, ax2):
     ax2.xaxis.grid(which='major', alpha=0.8)
     ax2.yaxis.grid(which='major', alpha=0.8)
 
-    LEGEND_LABELS = BIN_ORDER
-    legend = ax2.legend(labels=LEGEND_LABELS,
+    legend = ax2.legend(labels=bin_order,
         loc='upper left',
         bbox_to_anchor=(0.02, 1.0),
         frameon=True,
         shadow=True,
         framealpha=1.0,
-        fontsize=LARGEST_FONTSIZE * 0.6)
+        fontsize=largest_fontsize * 0.6)
     legend.get_frame().set_facecolor('#eeeeee')
     legend.get_frame().set_edgecolor('#888888')
     for index in range(20):  # arbitrarily large number of tries to cover all scenarios
@@ -127,7 +125,14 @@ def make_distplot_data(data):
 
 
 
-def distribution_plot(df, bin_col: str='', result_col: str='', bin_order: list=[]):
+def distribution_plot(df,
+                      title: str='Statplot Title',
+                      bin_col: str='',
+                      result_col: str='',
+                      bin_order: list=[],
+                      max_result: float=0,
+                      largest_fontsize: int=17):
+
     fig, ax1, ax2 = create_plot_objects()
 
     bin_order = _bin_order(df) if bin_order == [] else bin_order
@@ -135,7 +140,7 @@ def distribution_plot(df, bin_col: str='', result_col: str='', bin_order: list=[
     df['BINS'] = df[bin_col]
     df['RESULT'] = df[result_col]
 
-    swarmplot(df, ax1, bin_order=bin_order)
+    swarmplot(df, ax1, bin_order=bin_order, max_result=max_result)
 
     dist_data = []
 
@@ -144,15 +149,15 @@ def distribution_plot(df, bin_col: str='', result_col: str='', bin_order: list=[
         if len(filtered_data) > 0:
             dist_data.append(make_distplot_data(filtered_data))
 
-    dist_plot(dist_data, ax2)
+    dist_plot(dist_data, ax2, bin_order=bin_order, max_result=max_result)
 
-    tick_size = LARGEST_FONTSIZE * 0.7
+    tick_size = largest_fontsize * 0.7
     plt.setp(ax1.get_xticklabels(), fontsize=tick_size)
     plt.setp(ax1.get_yticklabels(), fontsize=tick_size)
     plt.setp(ax2.get_xticklabels(), fontsize=tick_size)
     plt.setp(ax2.get_yticklabels(), fontsize=tick_size)
 
-    fig.suptitle(PLOT_TITLE, fontsize=LARGEST_FONTSIZE, y=0.96)
+    fig.suptitle(title, fontsize=largest_fontsize, y=0.96)
     ax1.set_ylabel(result_col)
     ax1.set_xlabel(bin_col)
     ax2.set_xlabel(result_col)
