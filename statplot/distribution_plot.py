@@ -104,7 +104,6 @@ def _get_upper_bound(num):
             return 10 ** mag_order
 
 
-
 def add_bins(df):
     '''Adds text descriptions binning each point'''
     bin_col = df[BIN_COLUMN].tolist()
@@ -129,7 +128,7 @@ def make_distplot_data(data):
 
 
 
-def distribution_plot(df, bin_col: str='', result_col: str=''):
+def distribution_plot(df, bin_col: str='', result_col: str='', bin_order: list=[]):
     fig, ax1, ax2 = create_plot_objects()
 
     df['BINS'] = df[bin_col]
@@ -138,7 +137,11 @@ def distribution_plot(df, bin_col: str='', result_col: str=''):
     swarmplot(df, ax1)
 
     dist_data = []
-    for bin in _bin_order(df):
+
+    if bin_order == []:
+        bin_order = _bin_order(df)
+
+    for bin in bin_order:
         filtered_data = df[df[bin_col] == bin][result_col].tolist()
         if len(filtered_data) > 0:
             dist_data.append(make_distplot_data(filtered_data))
@@ -152,6 +155,10 @@ def distribution_plot(df, bin_col: str='', result_col: str=''):
     plt.setp(ax2.get_yticklabels(), fontsize=tick_size)
 
     fig.suptitle(PLOT_TITLE, fontsize=LARGEST_FONTSIZE, y=0.96)
+    ax1.set_ylabel(result_col)
+    ax1.set_xlabel(bin_col)
+    ax2.set_xlabel(bin_col)
+
     plt.subplots_adjust(left=0.08, right=0.95, bottom=0.08, top=0.90, wspace=0.10)
     plt.show()
 
