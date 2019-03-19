@@ -19,10 +19,10 @@ def _bin_order(df):
     return sorted({bin for bin in df.BINS})
 
 
-def swarmplot(df, ax):
+def swarmplot(df, ax, bin_order: list=[]):
     sns.set_style('whitegrid')
     ax.set_ylim([0, round(_get_upper_bound(df.RESULT.max()))])  # set ylim before plotting to ensure good swarmplot point spacing
-    BIN_ORDER =  _bin_order(df) # list of unique bins
+    BIN_ORDER =  _bin_order(df) if bin_order == [] else bin_order # list of unique bins
 
     point_size = 80 / (len(df) / len(set(df['BINS']))) ** 0.6
     ax = sns.swarmplot(x='BINS', y='RESULT', data=df, ax=ax, size=point_size, order=BIN_ORDER)
@@ -130,15 +130,14 @@ def make_distplot_data(data):
 def distribution_plot(df, bin_col: str='', result_col: str='', bin_order: list=[]):
     fig, ax1, ax2 = create_plot_objects()
 
+    bin_order = _bin_order(df) if bin_order == [] else bin_order
+
     df['BINS'] = df[bin_col]
     df['RESULT'] = df[result_col]
 
-    swarmplot(df, ax1)
+    swarmplot(df, ax1, bin_order=bin_order)
 
     dist_data = []
-
-    if bin_order == []:
-        bin_order = _bin_order(df)
 
     for bin in bin_order:
         filtered_data = df[df[bin_col] == bin][result_col].tolist()
