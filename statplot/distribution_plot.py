@@ -23,7 +23,7 @@ def swarmplot(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize:
         ax.set_ylim([0, max_result])  # set ylim before plotting to ensure good swarmplot point spacing
     BIN_ORDER =  _bin_order(df) if bin_order == [] else bin_order # list of unique bins
 
-    point_size = 70 / (len(df) / len(set(df['BINS']))) ** 0.6
+    point_size = 80 / (len(df) / len(set(df['BINS'])) + 15) ** 0.6
     ax = sns.swarmplot(x='BINS', y='RESULT', data=df, ax=ax, size=point_size, order=BIN_ORDER)
     ax.set_xlabel('')
     ax.set_ylabel('RESULT', fontsize=largest_fontsize * 0.8)
@@ -38,7 +38,7 @@ def swarmplot(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize:
             mean = df[df.BINS == float(bin_name)]['RESULT'].mean()
         ax.plot([tick-line_width/2, tick+line_width/2], [mean, mean], lw=5, color='#444455')
 
-    ax.text(0.05, 0.97, 'Lines Indicate Bin Mean', bbox={'facecolor': '#dfdfee', 'edgecolor': '#444455'}, fontdict={'size': largest_fontsize * 0.7}, transform=ax.transAxes)
+    ax.text(0.04, 0.96, 'Lines Indicate Bin Mean', bbox={'facecolor': '#dfdfee', 'edgecolor': '#444455'}, fontdict={'size': largest_fontsize * 0.7}, transform=ax.transAxes)
 
     ax.set_xlabel('X Label', fontsize=largest_fontsize * 0.8)
 
@@ -122,7 +122,7 @@ def make_distplot_data(data):
 
 
 def distribution_plot(df,
-                      title: str='Statplot Title',
+                      title: str='Distribution Plot',
                       bin_col: str='',
                       result_col: str='',
                       bin_order: list=[],
@@ -154,9 +154,9 @@ def distribution_plot(df,
     plt.setp(ax2.get_yticklabels(), fontsize=tick_size)
 
     fig.suptitle(title, fontsize=largest_fontsize, y=0.96)
-    ax1.set_ylabel(result_col)
-    ax1.set_xlabel(bin_col)
-    ax2.set_xlabel(result_col)
+    ax1.set_ylabel(result_col, fontsize=largest_fontsize * 0.85)
+    ax1.set_xlabel(bin_col, fontsize=largest_fontsize * 0.85)
+    ax2.set_xlabel(result_col, fontsize=largest_fontsize * 0.85)
 
     plt.subplots_adjust(left=0.08, right=0.95, bottom=0.08, top=0.90, wspace=0.10)
     plt.show()

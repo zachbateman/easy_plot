@@ -14,6 +14,7 @@ Utilizes pandas dataframes as standard format for input data.
         df = pandas.read_csv('test.csv')
         statplot.distribution_plot(df)
         ```
+    <img src="tests/images/distribution_plot_example.png" width="550px">
 
   - statplot.scatterplot_matrix_plot(df)
     - Plot a matrix of scatterplots.
