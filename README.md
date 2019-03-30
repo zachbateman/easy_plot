@@ -12,7 +12,7 @@ Utilizes pandas dataframes as standard format for input data.
         import pandas
         import statplot
         df = pandas.read_csv('test.csv')
-        statplot.distribution_plot(df)
+        statplot.distribution_plot(df, bin_col='Weight', result_col='Value')
         ```
     <img src="tests/images/distribution_plot_example.png" width="550px">
 
