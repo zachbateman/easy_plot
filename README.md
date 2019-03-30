@@ -25,6 +25,7 @@ Utilizes pandas dataframes as standard format for input data.
         df = pandas.read_csv('test.csv')
         statplot.scatterplot_matrix_plot(df)
         ```
+    <img src="tests/images/scatterplot_matrix_example.png" width="550px">
 
   - statplot.heatmap_plot(df)
     - Plot a heatmap.
@@ -35,6 +36,7 @@ Utilizes pandas dataframes as standard format for input data.
         df = pandas.read_csv('test.csv')
         statplot.heatmap_plot(df)
         ```
+    <img src="tests/images/heatmap_example.png" width="550px">
 
 
 License

@@ -6,7 +6,7 @@ import seaborn as sns
 
 
 
-def scatterplot_matrix_plot(df, title='Pairplot Title') -> None:
+def scatterplot_matrix_plot(df, title='Scatterplot Matrix') -> None:
     '''Display a scatterplot matrix for the df arg'''
     g = sns.pairplot(df, kind='reg', diag_kind='kde')
     g.fig.suptitle(title, y=0.96)

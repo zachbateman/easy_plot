@@ -6,7 +6,7 @@ import seaborn as sns
 
 
 
-def heatmap_plot(df, title='Heatmap Title') -> None:
+def heatmap_plot(df, title='Heatmap') -> None:
     '''
     Display a heatmap for the df arg
     Turn into or make separate Hinton diagram too!!!
