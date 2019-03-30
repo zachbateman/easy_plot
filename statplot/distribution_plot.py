@@ -23,7 +23,7 @@ def swarmplot(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize:
         ax.set_ylim([0, max_result])  # set ylim before plotting to ensure good swarmplot point spacing
     BIN_ORDER =  _bin_order(df) if bin_order == [] else bin_order # list of unique bins
 
-    point_size = 80 / (len(df) / len(set(df['BINS']))) ** 0.6
+    point_size = 70 / (len(df) / len(set(df['BINS']))) ** 0.6
     ax = sns.swarmplot(x='BINS', y='RESULT', data=df, ax=ax, size=point_size, order=BIN_ORDER)
     ax.set_xlabel('')
     ax.set_ylabel('RESULT', fontsize=largest_fontsize * 0.8)
@@ -32,19 +32,19 @@ def swarmplot(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize:
     line_width = 0.6
     for tick, text in zip(ax.get_xticks(), ax.get_xticklabels()):
         bin_name = text.get_text()
-        mean = df[df.BINS == bin_name]['RESULT'].mean()
+        try:
+            mean = df[df.BINS == bin_name]['RESULT'].mean()
+        except TypeError:
+            mean = df[df.BINS == float(bin_name)]['RESULT'].mean()
         ax.plot([tick-line_width/2, tick+line_width/2], [mean, mean], lw=5, color='#444455')
 
     ax.text(0.05, 0.97, 'Lines Indicate Bin Mean', bbox={'facecolor': '#dfdfee', 'edgecolor': '#444455'}, fontdict={'size': largest_fontsize * 0.7}, transform=ax.transAxes)
 
     ax.set_xlabel('X Label', fontsize=largest_fontsize * 0.8)
 
-
     def y_format(x, second_arg=None):  # idk... it is given a second arg that we don't need.
         return '{:,.0f}'.format(x)
     ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(y_format))
-    # return ax
-    # plt.show()
 
 
 def dist_plot(sorted_xy_lists, ax2, bin_order: list=[], max_result: float=0, largest_fontsize: int=17):
@@ -54,10 +54,6 @@ def dist_plot(sorted_xy_lists, ax2, bin_order: list=[], max_result: float=0, lar
     for i, xy_list in enumerate(sorted_xy_lists):
         x, y = zip(*xy_list)
         ax2.scatter(x, y, s=point_size) #, color='r')
-        # if i == 0:
-            # ax2.scatter(x, y, s=10) #, color='r')
-        # if i == 1:
-            # ax2.scatter(x, y, s=10) #, color='b')  # marker='l'
         max_x = max(x) if max(x) > max_x else max_x
 
     upper_limit = _get_upper_bound(max_x) if max_result == 0 else max_result
@@ -135,10 +131,10 @@ def distribution_plot(df,
 
     fig, ax1, ax2 = create_plot_objects()
 
-    bin_order = _bin_order(df) if bin_order == [] else bin_order
-
     df['BINS'] = df[bin_col]
     df['RESULT'] = df[result_col]
+
+    bin_order = _bin_order(df) if bin_order == [] else bin_order
 
     swarmplot(df, ax1, bin_order=bin_order, max_result=max_result)
 

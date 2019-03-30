@@ -5,7 +5,7 @@ import statplot
 
 def test_func():
     df = pandas.read_csv('test_data.csv')
-    statplot.distribution_plot(df, bin_col='color', result_col='value')
+    statplot.distribution_plot(df, bin_col='Weight', result_col='Value')
 
 
 
