@@ -16,6 +16,17 @@ Utilizes pandas dataframes as standard format for input data.
         ```
     <img src="tests/images/distribution_plot_example.png" width="550px">
 
+  - statplot.scatterplot(df)
+    - Plot a scatter plot.
+    - Usage:
+        ```sh
+        import pandas
+        import statplot
+        df = pandas.read_csv('test.csv')
+        statplot.scatterplot(df, xvar='Value', yvar='Value_2', sizevar='Weight')
+        ```
+    <img src="tests/images/scatterplot_example.png" width="550px">
+
   - statplot.scatterplot_matrix_plot(df)
     - Plot a matrix of scatterplots.
     - Usage:
