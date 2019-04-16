@@ -47,7 +47,7 @@ def swarmplot(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize:
     ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(y_format))
 
 
-def dist_plot(sorted_xy_lists, ax2, bin_order: list=[], max_result: float=0, largest_fontsize: int=17):
+def dist_plot(sorted_xy_lists, ax2, bin_order: list=[], max_result: float=0, largest_fontsize: int=17, distplot_xlim: list=[], distplot_xticks: list=[]):
 
     point_size = 350 / (len([val for xy_list in sorted_xy_lists for val in xy_list]) / len(sorted_xy_lists)) ** 0.6
     max_x = 0
@@ -56,9 +56,17 @@ def dist_plot(sorted_xy_lists, ax2, bin_order: list=[], max_result: float=0, lar
         ax2.scatter(x, y, s=point_size) #, color='r')
         max_x = max(x) if max(x) > max_x else max_x
 
-    upper_limit = _get_upper_bound(max_x) if max_result == 0 else max_result
-    ax2.set_xlim([0, upper_limit])
-    ax2.set_xticks([upper_limit / 5 * i for i in range(0, 5)])
+    if distplot_xlim == []:
+        upper_limit = _get_upper_bound(max_x) if max_result == 0 else max_result
+        ax2.set_xlim([0, upper_limit])
+    else:
+        ax2.set_xlim(distplot_xlim)
+
+    if distplot_xticks == []:
+        ax2.set_xticks([upper_limit / 5 * i for i in range(0, 5)])
+    else:
+        ax2.set_xticks(distplot_xticks)
+
     ax2.set_xlabel('RESULT', fontsize=largest_fontsize * 0.8)
 
     ax2.yaxis.tick_right()
@@ -127,7 +135,9 @@ def distribution_plot(df,
                       result_col: str='',
                       bin_order: list=[],
                       max_result: float=0,
-                      largest_fontsize: int=17):
+                      largest_fontsize: int=17,
+                      distplot_xlim: list=[],
+                      distplot_xticks: list=[]):
 
     fig, ax1, ax2 = create_plot_objects()
 
@@ -145,7 +155,7 @@ def distribution_plot(df,
         if len(filtered_data) > 0:
             dist_data.append(make_distplot_data(filtered_data))
 
-    dist_plot(dist_data, ax2, bin_order=bin_order, max_result=max_result)
+    dist_plot(dist_data, ax2, bin_order=bin_order, max_result=max_result, distplot_xlim=distplot_xlim, distplot_xticks=distplot_xticks)
 
     tick_size = largest_fontsize * 0.7
     plt.setp(ax1.get_xticklabels(), fontsize=tick_size)
