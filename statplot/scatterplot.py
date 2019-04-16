@@ -6,7 +6,7 @@ import seaborn as sns
 
 
 
-def scatterplot(df, xvar: str='', yvar: str='', sizevar: str='', colorvar: str='', stylevar: str='', size_minmax: tuple=(50  , 300), alpha: float=0.9, title='Scatterplot', largest_fontsize: int=17) -> None:
+def scatterplot(df, xvar: str='', yvar: str='', sizevar: str='', colorvar: str='', stylevar: str='', size_minmax: tuple=(50  , 300), alpha: float=0.9, title='Scatterplot', largest_fontsize: int=17, xlog=False, ylog=False) -> None:
     '''
     Display a (very nicely formatted) scatter plot for the df arg.
     Can visualize up to 5 variables by optionally using
@@ -19,6 +19,11 @@ def scatterplot(df, xvar: str='', yvar: str='', sizevar: str='', colorvar: str='
     ax.figure.suptitle(title, y=0.96, fontsize=largest_fontsize)
     ax.set_xlabel(xvar, fontsize=largest_fontsize * 0.85)
     ax.set_ylabel(yvar, fontsize=largest_fontsize * 0.85)
+
+    if xlog:
+        ax.set_xscale('log')
+    if ylog:
+        ax.set_yscale('log')
 
     plt.subplots_adjust(left=0.08, right=0.95, bottom=0.08, top=0.90, wspace=0.10)
     plt.show()
