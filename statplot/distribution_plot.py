@@ -105,17 +105,6 @@ def _get_upper_bound(num):
                 return partial * (10 ** mag_order)
 
 
-def add_bins(df):
-    '''Adds text descriptions binning each point'''
-    bin_col = df[BIN_COLUMN].tolist()
-    bins = []
-    for value in bin_col:
-        bins.append(value)
-        # if statements to handle undesired BIN_COLUMN values
-    df['BINS'] = bins
-    return df
-
-
 def create_plot_objects():
     fig = plt.figure(figsize=[10, 6])
     gs = gridspec.GridSpec(1, 2, width_ratios=[5, 3])
@@ -126,7 +115,6 @@ def create_plot_objects():
 
 def make_distplot_data(data):
     return [(val, (i+1)/len(data)) for i, val in enumerate(sorted(data))]
-
 
 
 def distribution_plot(df,
@@ -149,7 +137,6 @@ def distribution_plot(df,
     swarmplot(df, ax1, bin_order=bin_order, max_result=max_result)
 
     dist_data = []
-
     for bin in bin_order:
         filtered_data = df[df[bin_col] == bin][result_col].tolist()
         if len(filtered_data) > 0:
@@ -175,5 +162,5 @@ def distribution_plot(df,
 
 if __name__ == '__main__':
     data = pandas.read_excel('test.xlsx', converters={'col_1': str, 'col_2': str})
-    data = add_bins(data)
+    data['BINS'] = data[BIN_COLUMN].tolist()
     distribution_plot(data)
