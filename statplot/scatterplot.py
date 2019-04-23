@@ -25,6 +25,7 @@ def scatterplot(df, xvar: str='', yvar: str='', sizevar: str='', colorvar: str='
     if ylog:
         ax.set_yscale('log')
 
+    ax.set_axisbelow(True)
     if major_gridlines:
         ax.grid(which='major', linestyle='-', linewidth=1, color='#bbbbbb')
     if minor_gridlines:
