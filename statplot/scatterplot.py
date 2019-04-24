@@ -12,8 +12,16 @@ def scatterplot(df, xvar: str='', yvar: str='', sizevar: str='', colorvar: str='
     Can visualize up to 5 variables by optionally using
     point size and/or color for additional dimensions.
     '''
-    splot_kwargs = {'x': xvar, 'y': yvar, 'size': sizevar}
+    splot_kwargs = {'x': xvar, 'y': yvar}
     splot_kwargs['sizes'] = size_minmax
+    if sizevar != '':
+        splot_kwargs['size'] = sizevar
+    else:
+        splot_kwargs['s'] = 200
+    if colorvar != '':
+        splot_kwargs['hue'] = colorvar
+        splot_kwargs['palette'] = 'coolwarm'
+
 
     ax = sns.scatterplot(data=df, **splot_kwargs, alpha=alpha, legend=False)
     ax.figure.suptitle(title, y=0.96, fontsize=largest_fontsize)
