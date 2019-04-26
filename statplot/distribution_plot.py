@@ -42,8 +42,7 @@ def swarmplot(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize:
 
     ax.set_xlabel('X Label', fontsize=largest_fontsize * 0.8)
 
-    def y_format(x, second_arg=None):  # idk... it is given a second arg that we don't need.
-        return '{:,.0f}'.format(x)
+    y_format = axis_formatter(max_result)
     ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(y_format))
 
 
@@ -73,9 +72,7 @@ def dist_plot(sorted_xy_lists, ax2, bin_order: list=[], max_result: float=0, lar
     ax2.set_yticks([i / 10 for i in range(1, 10)])  # arg needs to be a list
     ax2.set_yticklabels(['P90', '', '', '', 'P50', '', '', '', 'P10'])
 
-    def x_format(x, second_arg=None):  # idk... it is given a second arg that we don't need.
-        return '{:,.0f}'.format(x)
-
+    x_format = axis_formatter(_get_upper_bound(max_x) if max_result == 0 else max_result) if distplot_xlim == [] else axis_formatter(distplot_xlim[1])
     ax2.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(x_format))
 
     ax2.xaxis.grid(which='major', alpha=0.8)
@@ -95,6 +92,21 @@ def dist_plot(sorted_xy_lists, ax2, bin_order: list=[], max_result: float=0, lar
             legend.legendHandles[index]._sizes = [point_size]  # specifies size of legend marker
         except:
             pass
+
+
+def axis_formatter(max_value: float):
+    '''
+    Returns a string used by matplotlib for formatting axis labels
+    "second_arg" is something given to the function... not sure what that's about but don't need it
+    '''
+    if max_value < 0.1:
+        return lambda x, second_arg: '{:,.3f}'.format(x)
+    elif max_value < 1:
+        return lambda x, second_arg: '{:,.2f}'.format(x)
+    elif max_value < 10:
+        return lambda x, second_arg: '{:,.1f}'.format(x)
+    else:
+        return lambda x, second_arg: '{:,.0f}'.format(x)
 
 
 def _get_upper_bound(num):
