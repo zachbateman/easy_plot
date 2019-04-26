@@ -6,7 +6,7 @@ import seaborn as sns
 
 
 
-def scatterplot(df, xvar: str='', yvar: str='', sizevar: str='', colorvar: str='', stylevar: str='', size_minmax: tuple=(50  , 300), alpha: float=0.9, title='Scatterplot', largest_fontsize: int=17, xlog=False, ylog=False, major_gridlines=False, minor_gridlines=False) -> None:
+def scatterplot(df, xvar: str='', yvar: str='', sizevar: str='', colorvar: str='', stylevar: str='', size_minmax: tuple=(50  , 300), alpha: float=0.9, title='Scatterplot', largest_fontsize: int=17, xlog=False, ylog=False, major_gridlines=False, minor_gridlines=False, xlim=[], ylim=[]) -> None:
     '''
     Display a (very nicely formatted) scatter plot for the df arg.
     Can visualize up to 5 variables by optionally using
@@ -39,6 +39,11 @@ def scatterplot(df, xvar: str='', yvar: str='', sizevar: str='', colorvar: str='
     if minor_gridlines:
         ax.minorticks_on()
         ax.grid(which='minor', linestyle='-', linewidth=0.5, color='#cccccc')
+
+    if xlim != []:
+        ax.set_xlim(xlim)
+    if ylim != []:
+        ax.set_ylim(ylim)
 
     plt.subplots_adjust(left=0.08, right=0.95, bottom=0.08, top=0.90, wspace=0.10)
     plt.show()
