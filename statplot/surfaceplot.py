@@ -8,10 +8,12 @@ from mpl_toolkits.mplot3d import Axes3D
 import math
 
 
-def surfaceplot(df, xvar: str='', yvar: str='', zvar: str='', title='Surface Plot', bins=20, minpoints=3, smooth=False, largest_fontsize: int=17, zero_minz=True) -> None:
+def surfaceplot(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', title='Surface Plot', bins=20, minpoints=3, smooth=False, largest_fontsize: int=17, zero_minz=True) -> None:
     '''
     Display a surface plot of specified x, y and z columns
     "bins" arg is how many bins to be used in averaging the points.
+
+    optional "scatter_sub_df" kwargs is a filtered dataframe that will plot a subset of 3d points separately from 3d surface calculations
     '''
     x = df[xvar].tolist()
     y = df[yvar].tolist()
@@ -24,8 +26,15 @@ def surfaceplot(df, xvar: str='', yvar: str='', zvar: str='', title='Surface Plo
     surf = ax.plot_trisurf(plot_x, plot_y, plot_z, cmap=plt.cm.viridis, linewidth=0.5, alpha=0.9)
     fig.colorbar(surf, shrink=0.5, aspect=5)
 
-    ax.scatter(x, y, zdir='z', zs=0, s=3, alpha=0.5, color='blue')
-    ax.scatter(x, y, zdir='z', zs=z, s=30, alpha=0.2, color='blue')
+    if len(scatter_sub_df) > 0:
+        sub_x = scatter_sub_df[xvar].tolist()
+        sub_y = scatter_sub_df[yvar].tolist()
+        sub_z = scatter_sub_df[zvar].tolist()
+        ax.scatter(sub_x, sub_y, zdir='z', zs=0, s=3, alpha=0.5, color='blue')
+        ax.scatter(sub_x, sub_y, zdir='z', zs=sub_z, s=30, alpha=0.2, color='blue')
+    else:
+        ax.scatter(x, y, zdir='z', zs=0, s=3, alpha=0.5, color='blue')
+        ax.scatter(x, y, zdir='z', zs=z, s=30, alpha=0.2, color='blue')
 
     ax.set_xlabel(f'\n{xvar}', fontsize=0.7 * largest_fontsize, linespacing=2)
     ax.set_ylabel(f'\n{yvar}', fontsize=0.7 * largest_fontsize, linespacing=3)
@@ -36,7 +45,7 @@ def surfaceplot(df, xvar: str='', yvar: str='', zvar: str='', title='Surface Plo
     ax.zaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.0f}'.format(n)))
 
     if zero_minz:
-        ax.set_zlim(zmin=0)
+        ax.set_zlim(bottom=0)
 
     plt.suptitle(title, fontsize=largest_fontsize)
     plt.subplots_adjust(left=0.04, right=1.0, bottom=0.02, top=0.98)
