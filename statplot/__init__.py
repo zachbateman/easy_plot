@@ -5,5 +5,6 @@ from .scatterplot import scatterplot
 from .trendplot import trendplot
 from .surfaceplot import surfaceplot
 from .pca import pca_screeplot
+from .histogram import histogram
 from . import cleaning
 from .info import __doc__
