@@ -40,7 +40,7 @@ def contourplot(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='',
         contours = plt.contour(xi, yi, zi, levels=contour_levels, cmap=plt.cm.viridis)
     else:
         contours = plt.contour(xi, yi, zi, levels=bins, cmap=plt.cm.viridis) #, linewidth=0.5, alpha=0.9)
-    plt.clabel(contours, inline=True, fontsize=10, fmt=label_format)
+    plt.clabel(contours, inline=True, fontsize=0.65 * largest_fontsize, fmt=label_format)
 
     if colorbar:
         plt.colorbar(contours, shrink=0.7, aspect=3)
