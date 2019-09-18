@@ -64,11 +64,11 @@ def generate_3d_points(coordinates: list, bins: int=10, minpoints: int=7, smooth
     x, y, z = zip(*coordinates)
     minx, maxx = min(x), max(x)
     miny, maxy = min(y), max(y)
-    midx = sorted(x)[len(x)//2]  # median
-    midy = sorted(y)[len(y)//2]  # median
+    midx = sorted([abs(n) for n in x])[len(x)//2]  # median
+    midy = sorted([abs(n) for n in y])[len(y)//2]  # median
 
     def magnitude(n):
-        return int(math.log10(n))
+        return int(math.log10(abs(n)))
 
     magx = magnitude(midx)
     magy = magnitude(midy)
@@ -76,9 +76,9 @@ def generate_3d_points(coordinates: list, bins: int=10, minpoints: int=7, smooth
     # next lines set the lower and upper bounds of the bins on both x & y
     # clever method to round to the nearest number below and above min and max at the current order of magnitude
     # could have issues if variables span several orders of magnitude!!!
-    bin_min_x = minx - minx % 10 ** magx
+    bin_min_x = minx - abs(minx) % 10 ** magx
     bin_max_x = maxx + 10 ** magx - maxx % 10 ** magx
-    bin_min_y = miny - miny % 10 ** magy
+    bin_min_y = miny - abs(miny) % 10 ** magy
     bin_max_y = maxy + 10 ** magy - maxy % 10 ** magy
 
     bin_size_x = (bin_max_x - bin_min_x) / bins
