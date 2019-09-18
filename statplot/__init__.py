@@ -6,5 +6,6 @@ from .trendplot import trendplot
 from .surfaceplot import surfaceplot
 from .pca import pca_screeplot
 from .histogram import histogram
+from .contourplot import contourplot
 from . import cleaning
 from .info import __doc__
