@@ -15,12 +15,15 @@ def _bin_order(df):
     return sorted({bin for bin in df.BINS})
 
 
-def swarmplot(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize: int=17):
+def swarmplot(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize: int=17, swarmplot_ylim: list=[]):
     sns.set_style('whitegrid')
     if max_result == 0:
         ax.set_ylim([0, round(_get_upper_bound(df.RESULT.max()))])  # set ylim before plotting to ensure good swarmplot point spacing
     else:
         ax.set_ylim([0, max_result])  # set ylim before plotting to ensure good swarmplot point spacing
+    if swarmplot_ylim != []:
+        ax.set_ylim(swarmplot_ylim)
+
     BIN_ORDER =  _bin_order(df) if bin_order == [] else bin_order # list of unique bins
 
     point_size = 80 / (len(df) / len(set(df['BINS'])) + 15) ** 0.6
@@ -137,6 +140,7 @@ def distribution_plot(df,
                       max_result: float=0,
                       largest_fontsize: int=17,
                       distplot_xlim: list=[],
+                      swarmplot_ylim: list=[],
                       distplot_xticks: list=[]):
 
     fig, ax1, ax2 = create_plot_objects()
@@ -146,7 +150,7 @@ def distribution_plot(df,
 
     bin_order = _bin_order(df) if bin_order == [] else bin_order
 
-    swarmplot(df, ax1, bin_order=bin_order, max_result=max_result)
+    swarmplot(df, ax1, bin_order=bin_order, max_result=max_result, swarmplot_ylim=swarmplot_ylim)
 
     dist_data = []
     for bin in bin_order:
