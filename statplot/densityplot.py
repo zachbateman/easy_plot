@@ -6,7 +6,7 @@ import seaborn as sns
 
 
 
-def densityplot(df, xvar='', x_label: str='', y_label: str='', show_rug: bool=False, size_minmax: tuple=(50  , 300), alpha: float=0.9, title='Densityplot', largest_fontsize: int=17, xlog=False, ylog=False, major_gridlines=False, minor_gridlines=False, xlim=[], ylim=[]) -> None:
+def densityplot(df, xvar='', categoryvar: str='', x_label: str='', y_label: str='', show_rug: bool=False, size_minmax: tuple=(50  , 300), alpha: float=0.9, title='Densityplot', largest_fontsize: int=17, xlog=False, ylog=False, major_gridlines=False, minor_gridlines=False, xlim=[], ylim=[]) -> None:
     '''
     Display a density plot for the xvar arg (string or iterable of strings).
     '''
@@ -22,9 +22,26 @@ def densityplot(df, xvar='', x_label: str='', y_label: str='', show_rug: bool=Fa
 
     colors = sns.color_palette(palette=None)
     if type(xvar) == str:
-        ax = sns.kdeplot(df[xvar], shade=True)
-        if show_rug:
-            ax.plot(df[xvar], [0.0] * len(df), '|', color=colors[0])
+        if categoryvar == '':
+            ax = sns.kdeplot(df[xvar], shade=True)
+            if show_rug:
+                ax.plot(df[xvar], [0.0] * len(df), '|', color=colors[0])
+        else:
+            categories = sorted(set(df[categoryvar].tolist()))
+            counter = 0
+            plotted_categories = []
+            for cat in categories:
+                fil = df[df[categoryvar] == cat]
+                if len(fil) > 1:
+                    ax = sns.kdeplot(fil[xvar], shade=True)
+                    plotted_categories.append(cat)
+                    if show_rug:
+                        ax.plot(fil[xvar], [0.0] * len(fil), '|', color=colors[counter])
+                        counter += 1
+                else:
+                    print(f'Error plotting {cat} since at least two points are needed!')
+            label_list = [t for t in ax.get_legend_handles_labels()]
+            ax.legend(handles=label_list[0], labels=plotted_categories)
     else:
         for i, var in enumerate(xvar):
             ax = sns.kdeplot(df[var], shade=True)
