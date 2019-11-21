@@ -2,6 +2,7 @@ from .distribution_plot import distribution_plot
 from .scatterplot_matrix_plot import scatterplot_matrix_plot
 from .heatmap_plot import heatmap_plot
 from .scatterplot import scatterplot
+from .lineplot import lineplot
 from .trendplot import trendplot
 from .surfaceplot import surfaceplot
 from .pca import pca_screeplot
