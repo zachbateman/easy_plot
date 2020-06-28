@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from matplotlib import gridspec
 import seaborn as sns
 import pandas
-import datetime
 from pprint import pprint as pp
 
 
@@ -56,6 +55,7 @@ def dist_plot(sorted_xy_lists, ax2, bin_order: list=[], max_result: float=0, lar
         upper_limit = _get_upper_bound(max_x) if max_result == 0 else max_result
         ax2.set_xlim([0, upper_limit])
     else:
+        upper_limit = distplot_xlim[-1]
         ax2.set_xlim(distplot_xlim)
 
     if distplot_xticks == []:
