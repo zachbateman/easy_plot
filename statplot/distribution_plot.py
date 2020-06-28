@@ -24,21 +24,15 @@ def swarmplot(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize:
     if swarmplot_ylim != []:
         ax.set_ylim(swarmplot_ylim)
 
-    BIN_ORDER =  _bin_order(df) if bin_order == [] else bin_order # list of unique bins
-
     point_size = 80 / (len(df) / len(set(df['BINS'])) + 15) ** 0.6
-    ax = sns.swarmplot(x='BINS', y='RESULT', data=df, ax=ax, size=point_size, order=BIN_ORDER)
+    ax = sns.swarmplot(x='BINS', y='RESULT', data=df, ax=ax, size=point_size, order=bin_order)
     ax.set_xlabel('')
     ax.set_ylabel('RESULT', fontsize=largest_fontsize * 0.8)
     ax.tick_params(labelsize=10)
 
     line_width = 0.6
-    for tick, text in zip(ax.get_xticks(), ax.get_xticklabels()):
-        bin_name = text.get_text()
-        try:
-            mean = df[df.BINS == bin_name]['RESULT'].mean()
-        except TypeError:
-            mean = df[df.BINS == float(bin_name)]['RESULT'].mean()
+    for i, (tick, text) in enumerate(zip(ax.get_xticks(), ax.get_xticklabels())):
+        mean = df[df.BINS == bin_order[i]]['RESULT'].mean()
         ax.plot([tick-line_width/2, tick+line_width/2], [mean, mean], lw=5, color='#444455')
 
     ax.text(0.04, 0.96, 'Lines Indicate Bin Mean', bbox={'facecolor': '#dfdfee', 'edgecolor': '#444455'}, fontdict={'size': largest_fontsize * 0.7}, transform=ax.transAxes)
@@ -148,7 +142,7 @@ def distribution_plot(df,
     df['BINS'] = df[bin_col]
     df['RESULT'] = df[result_col]
 
-    bin_order = _bin_order(df) if bin_order == [] else bin_order
+    bin_order = _bin_order(df) if bin_order == [] else bin_order  # list of unique bins
 
     swarmplot(df, ax1, bin_order=bin_order, max_result=max_result, swarmplot_ylim=swarmplot_ylim)
 
