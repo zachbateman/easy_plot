@@ -20,7 +20,7 @@ def densityplot(df, xvar='', categoryvar: str='', x_label: str='', y_label: str=
         # plot_kwargs['hue'] = colorvar
         # plot_kwargs['palette'] = 'coolwarm'
 
-    colors = sns.color_palette(palette=None)
+    colors = sns.color_palette(n_colors=len(set(df[categoryvar].tolist())))
     if type(xvar) == str:
         if categoryvar == '':
             ax = sns.kdeplot(df[xvar], shade=True)
