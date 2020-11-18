@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib import gridspec
 import seaborn as sns
 import pandas
+import math
 from pprint import pprint as pp
 
 
@@ -123,7 +124,7 @@ def create_plot_objects():
 
 
 def make_distplot_data(data):
-    return [(val, (i+1)/len(data)) for i, val in enumerate(sorted(data))]
+    return [(val, (i+1)/len(data)) for i, val in enumerate(sorted(x for x in data if x is not None and not math.isnan(x)))]
 
 
 def distribution_plot(df,
