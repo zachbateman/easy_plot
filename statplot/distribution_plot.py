@@ -19,6 +19,7 @@ def swarmplot(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize:
     sns.set_style('whitegrid')
     if max_result == 0:
         ax.set_ylim([0, round(_get_upper_bound(df.RESULT.max()))])  # set ylim before plotting to ensure good swarmplot point spacing
+        max_result = df.RESULT.max()
     else:
         ax.set_ylim([0, max_result])  # set ylim before plotting to ensure good swarmplot point spacing
     if swarmplot_ylim != []:
@@ -94,17 +95,17 @@ def dist_plot(sorted_xy_lists, ax2, bin_order: list=[], max_result: float=0, lar
 
 def axis_formatter(max_value: float):
     '''
-    Returns a string used by matplotlib for formatting axis labels
-    "second_arg" is something given to the function... not sure what that's about but don't need it
+    Returns a function that returns a string which is used by matplotlib for formatting axis labels
+    A second arg is given to the function... not sure what that's about but don't need it.
     '''
     if max_value < 0.1:
-        return lambda x, second_arg: '{:,.3f}'.format(x)
+        return lambda x, *args: '{:,.3f}'.format(x)
     elif max_value < 1:
-        return lambda x, second_arg: '{:,.2f}'.format(x)
+        return lambda x, *args: '{:,.2f}'.format(x)
     elif max_value < 10:
-        return lambda x, second_arg: '{:,.1f}'.format(x)
+        return lambda x, *args: '{:,.1f}'.format(x)
     else:
-        return lambda x, second_arg: '{:,.0f}'.format(x)
+        return lambda x, *args: '{:,.0f}'.format(x)
 
 
 def _get_upper_bound(num):
