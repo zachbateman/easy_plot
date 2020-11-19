@@ -6,28 +6,18 @@ import seaborn as sns
 
 
 
-def densityplot(df, xvar='', categoryvar: str='', x_label: str='', y_label: str='', show_rug: bool=False, size_minmax: tuple=(50  , 300), alpha: float=0.9, title='Densityplot', largest_fontsize: int=17, xlog=False, ylog=False, major_gridlines=False, minor_gridlines=False, xlim=[], ylim=[]) -> None:
+def densityplot(df, xvar, categoryvar: str='', x_label: str='', y_label: str='', show_rug: bool=False, size_minmax: tuple=(50  , 300), alpha: float=0.9, title='Densityplot', largest_fontsize: int=17, xlog=False, major_gridlines=False, minor_gridlines=False, xlim=[], ylim=[]) -> None:
     '''
     Display a density plot for the xvar arg (string or iterable of strings).
     '''
-    # plot_kwargs = {'x': xvar, 'y': yvar}
-    # plot_kwargs['sizes'] = size_minmax
-    # if sizevar != '':
-        # plot_kwargs['size'] = sizevar
-    # else:
-        # plot_kwargs['s'] = 200
-    # if colorvar != '':
-        # plot_kwargs['hue'] = colorvar
-        # plot_kwargs['palette'] = 'coolwarm'
-
-    colors = sns.color_palette(n_colors=len(set(df[categoryvar].tolist())))
+    colors = sns.color_palette(n_colors=len(set(df[categoryvar])) if categoryvar else 10)
     if type(xvar) == str:
         if categoryvar == '':
             ax = sns.kdeplot(df[xvar], shade=True)
             if show_rug:
                 ax.plot(df[xvar], [0.0] * len(df), '|', color=colors[0])
         else:
-            categories = sorted(set(df[categoryvar].tolist()))
+            categories = sorted(set(df[categoryvar]))
             counter = 0
             plotted_categories = []
             for cat in categories:
@@ -55,11 +45,8 @@ def densityplot(df, xvar='', categoryvar: str='', x_label: str='', y_label: str=
         ax.set_ylabel(y_label, fontsize=largest_fontsize * 0.85)
 
     ax.set_yticks([])
-
     if xlog:
         ax.set_xscale('log')
-    if ylog:
-        ax.set_yscale('log')
 
     ax.set_axisbelow(True)
     if major_gridlines:

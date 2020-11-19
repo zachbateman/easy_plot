@@ -7,15 +7,57 @@ from matplotlib import gridspec
 import seaborn as sns
 import pandas
 import math
-from pprint import pprint as pp
 
 
 
-def _bin_order(df):
-    return sorted({bin for bin in df.BINS})
+def distribution_plot(df,
+                      title: str='Distribution Plot',
+                      bin_col: str='',
+                      result_col: str='',
+                      bin_order: list=[],
+                      max_result: float=0,
+                      largest_fontsize: int=17,
+                      distplot_xlim: list=[],
+                      swarmplot_ylim: list=[],
+                      distplot_xticks: list=[],
+                      mean_line: bool=True,
+                      median_line: bool=False,
+                      gridlines: bool=False):
+
+    fig, ax1, ax2 = create_plot_objects()
+
+    df['BINS'] = df[bin_col]
+    df['RESULT'] = df[result_col]
+
+    bin_order = sorted({bin for bin in df.BINS}) if bin_order == [] else bin_order  # list of unique bins
+
+    swarmplot(df, ax1, bin_order=bin_order, max_result=max_result, swarmplot_ylim=swarmplot_ylim, mean_line=mean_line, median_line=median_line, gridlines=gridlines)
+
+    dist_data = []
+    for bin in bin_order:
+        filtered_data = df[df[bin_col] == bin][result_col].tolist()
+        if len(filtered_data) > 0:
+            dist_data.append(make_distplot_data(filtered_data))
+
+    dist_plot(dist_data, ax2, bin_order=bin_order, max_result=max_result, distplot_xlim=distplot_xlim, distplot_xticks=distplot_xticks)
+
+    tick_size = largest_fontsize * 0.7
+    plt.setp(ax1.get_xticklabels(), fontsize=tick_size)
+    plt.setp(ax1.get_yticklabels(), fontsize=tick_size)
+    plt.setp(ax2.get_xticklabels(), fontsize=tick_size)
+    plt.setp(ax2.get_yticklabels(), fontsize=tick_size)
+
+    fig.suptitle(title, fontsize=largest_fontsize, y=0.96)
+    ax1.set_ylabel(result_col, fontsize=largest_fontsize * 0.85)
+    ax1.set_xlabel(bin_col, fontsize=largest_fontsize * 0.85)
+    ax2.set_xlabel(result_col, fontsize=largest_fontsize * 0.85)
+
+    plt.subplots_adjust(left=0.08, right=0.95, bottom=0.08, top=0.90, wspace=0.10)
+    plt.show()
 
 
-def swarmplot(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize: int=17, swarmplot_ylim: list=[]):
+def swarmplot(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize: int=17, swarmplot_ylim: list=[], mean_line: bool=True, median_line: bool=False, gridlines: bool=False):
+    '''Swarmplot on left side'''
     sns.set_style('whitegrid')
     if max_result == 0:
         ax.set_ylim([0, round(_get_upper_bound(df.RESULT.max()))])  # set ylim before plotting to ensure good swarmplot point spacing
@@ -27,25 +69,30 @@ def swarmplot(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize:
 
     point_size = 80 / (len(df) / len(set(df['BINS'])) + 15) ** 0.6
     ax = sns.swarmplot(x='BINS', y='RESULT', data=df, ax=ax, size=point_size, order=bin_order)
-    ax.set_xlabel('')
-    ax.set_ylabel('RESULT', fontsize=largest_fontsize * 0.8)
     ax.tick_params(labelsize=10)
 
     line_width = 0.6
     for i, (tick, text) in enumerate(zip(ax.get_xticks(), ax.get_xticklabels())):
         mean = df[df.BINS == bin_order[i]]['RESULT'].mean()
-        ax.plot([tick-line_width/2, tick+line_width/2], [mean, mean], lw=5, color='#444455')
+        median = df[df.BINS == bin_order[i]]['RESULT'].median()
+        if mean_line:
+            ax.plot([tick-line_width/2, tick+line_width/2], [mean, mean], lw=5, color='#444455')
+        if median_line:
+            ax.plot([tick-line_width/2, tick+line_width/2], [median, median], lw=4, color='#666677', linestyle='dashed')
 
-    ax.text(0.04, 0.96, 'Lines Indicate Bin Mean', bbox={'facecolor': '#dfdfee', 'edgecolor': '#444455'}, fontdict={'size': largest_fontsize * 0.7}, transform=ax.transAxes)
-
-    ax.set_xlabel('X Label', fontsize=largest_fontsize * 0.8)
+    if mean_line:
+        ax.text(0.04, 0.96, 'Solid Lines Indicate Bin Mean', bbox={'facecolor': '#dfdfee', 'edgecolor': '#444455', 'alpha': 0.6}, fontdict={'size': largest_fontsize * 0.7}, transform=ax.transAxes)
+    if median_line:
+        ax.text(0.04, 0.90 if mean_line else 0.96, 'Dashed Lines Indicate Bin Median', bbox={'facecolor': '#dfdfee', 'edgecolor': '#444455', 'alpha': 0.6}, fontdict={'size': largest_fontsize * 0.7}, transform=ax.transAxes)
 
     y_format = axis_formatter(max_result)
     ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(y_format))
+    if gridlines:
+        ax.yaxis.grid(color='#dddddd')
 
 
 def dist_plot(sorted_xy_lists, ax2, bin_order: list=[], max_result: float=0, largest_fontsize: int=17, distplot_xlim: list=[], distplot_xticks: list=[]):
-
+    '''Distribution/probability chart on right side'''
     point_size = 350 / (len([val for xy_list in sorted_xy_lists for val in xy_list]) / len(sorted_xy_lists)) ** 0.6
     max_x = 0
     for i, xy_list in enumerate(sorted_xy_lists):
@@ -126,53 +173,3 @@ def create_plot_objects():
 
 def make_distplot_data(data):
     return [(val, (i+1)/len(data)) for i, val in enumerate(sorted(x for x in data if x is not None and not math.isnan(x)))]
-
-
-def distribution_plot(df,
-                      title: str='Distribution Plot',
-                      bin_col: str='',
-                      result_col: str='',
-                      bin_order: list=[],
-                      max_result: float=0,
-                      largest_fontsize: int=17,
-                      distplot_xlim: list=[],
-                      swarmplot_ylim: list=[],
-                      distplot_xticks: list=[]):
-
-    fig, ax1, ax2 = create_plot_objects()
-
-    df['BINS'] = df[bin_col]
-    df['RESULT'] = df[result_col]
-
-    bin_order = _bin_order(df) if bin_order == [] else bin_order  # list of unique bins
-
-    swarmplot(df, ax1, bin_order=bin_order, max_result=max_result, swarmplot_ylim=swarmplot_ylim)
-
-    dist_data = []
-    for bin in bin_order:
-        filtered_data = df[df[bin_col] == bin][result_col].tolist()
-        if len(filtered_data) > 0:
-            dist_data.append(make_distplot_data(filtered_data))
-
-    dist_plot(dist_data, ax2, bin_order=bin_order, max_result=max_result, distplot_xlim=distplot_xlim, distplot_xticks=distplot_xticks)
-
-    tick_size = largest_fontsize * 0.7
-    plt.setp(ax1.get_xticklabels(), fontsize=tick_size)
-    plt.setp(ax1.get_yticklabels(), fontsize=tick_size)
-    plt.setp(ax2.get_xticklabels(), fontsize=tick_size)
-    plt.setp(ax2.get_yticklabels(), fontsize=tick_size)
-
-    fig.suptitle(title, fontsize=largest_fontsize, y=0.96)
-    ax1.set_ylabel(result_col, fontsize=largest_fontsize * 0.85)
-    ax1.set_xlabel(bin_col, fontsize=largest_fontsize * 0.85)
-    ax2.set_xlabel(result_col, fontsize=largest_fontsize * 0.85)
-
-    plt.subplots_adjust(left=0.08, right=0.95, bottom=0.08, top=0.90, wspace=0.10)
-    plt.show()
-
-
-
-if __name__ == '__main__':
-    data = pandas.read_excel('test.xlsx', converters={'col_1': str, 'col_2': str})
-    data['BINS'] = data[BIN_COLUMN].tolist()
-    distribution_plot(data)

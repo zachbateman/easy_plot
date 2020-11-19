@@ -5,15 +5,12 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 import seaborn as sns
-import math
 
 
 
 def histogram(values: list, xvar: str='Values', bins: int=20, title='Histogram', largest_fontsize: int=17, major_gridlines=False, minor_gridlines=False, xlim=[], ylim=[]) -> None:
     '''
-    Display a (very nicely formatted) scatter plot for the df arg.
-    Can visualize up to 5 variables by optionally using
-    point size and/or color for additional dimensions.
+    Display a histogram for the df arg.
     '''
     ax = sns.distplot(values, bins=bins, kde=False, rug=True)
 
