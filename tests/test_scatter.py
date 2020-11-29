@@ -5,7 +5,8 @@ import statplot
 
 def test_func():
     df = pandas.read_csv('test_data.csv')
-    statplot.distribution_plot(df, bin_col='Weight', result_col='Value', mean_line=True, median_line=True)
+    statplot.scatter(df, xvar='Value', yvar='Value_2', sizevar='Weight', colorvar='Value_3')
+    statplot.scatter(df, xvar='Value', yvar='Value_2')
 
 
 

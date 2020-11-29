@@ -5,8 +5,8 @@ import statplot
 
 def test_func():
     df = pandas.read_csv('test_data.csv')
-    statplot.scatterplot(df, xvar='Value', yvar='Value_2', sizevar='Weight', colorvar='Value_3')
-    statplot.scatterplot(df, xvar='Value', yvar='Value_2')
+    statplot.line(df, xvar='Weight', yvar=['Value', 'Value_2', 'Value_3'])
+    statplot.line(df, xvar='Value', yvar='Size', hue='Weight')
 
 
 

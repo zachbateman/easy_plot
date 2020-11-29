@@ -1,13 +1,13 @@
-from .distribution_plot import distribution_plot
-from .scatterplot_matrix_plot import scatterplot_matrix_plot
-from .heatmap_plot import heatmap_plot
-from .scatterplot import scatterplot
-from .lineplot import lineplot
-from .densityplot import densityplot
-from .trendplot import trendplot
-from .surfaceplot import surfaceplot
-from .pca import pca_screeplot
+from .distribution import distribution
+from .scatter_matrix import scatter_matrix
+from .heatmap import heatmap
+from .scatter import scatter
+from .line import line
+from .density import density
+from .trend import trend
+from .surface import surface
+# from ._pca import pca_scree
 from .histogram import histogram
-from .contourplot import contourplot
-from . import cleaning
+from .contour import contour
+# from . import cleaning
 from .info import __doc__

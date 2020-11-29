@@ -6,8 +6,8 @@ import seaborn as sns
 
 
 
-def scatterplot_matrix_plot(df, title='Scatterplot Matrix', regression_order=2) -> None:
-    '''Display a scatterplot matrix for the df arg'''
+def scatter_matrix(df, title='Scatterplot Matrix', regression_order=2) -> None:
+    '''Display a scatter plot matrix for the df arg'''
 
     g = sns.PairGrid(df, diag_sharey=False)
     g.map_lower(sns.kdeplot)

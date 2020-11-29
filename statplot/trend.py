@@ -1,5 +1,5 @@
 '''
-Python module for generating scatter plots.
+Python module for generating trend plots.
 '''
 import matplotlib
 import matplotlib.pyplot as plt
@@ -7,7 +7,7 @@ import seaborn as sns
 
 
 
-def trendplot(df, xvar: str='', yvar: str='', binvar: str='', alpha: float=0.25, title='Trend Plot', largest_fontsize: int=17, xlog=False, ylog=False, major_gridlines=True, minor_gridlines=True, xlim=[0, 10], ylim=[1, 1000]) -> None:
+def trend(df, xvar: str='', yvar: str='', binvar: str='', alpha: float=0.25, title='Trend Plot', largest_fontsize: int=17, xlog=False, ylog=False, major_gridlines=True, minor_gridlines=True, xlim=[0, 10], ylim=[1, 1000]) -> None:
     '''
     Display a trend plot plot for the df arg.
     '''

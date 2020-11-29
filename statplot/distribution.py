@@ -10,19 +10,19 @@ import math
 
 
 
-def distribution_plot(df,
-                      title: str='Distribution Plot',
-                      bin_col: str='',
-                      result_col: str='',
-                      bin_order: list=[],
-                      max_result: float=0,
-                      largest_fontsize: int=17,
-                      distplot_xlim: list=[],
-                      swarmplot_ylim: list=[],
-                      distplot_xticks: list=[],
-                      mean_line: bool=True,
-                      median_line: bool=False,
-                      gridlines: bool=False):
+def distribution(df,
+                          title: str='Distribution Plot',
+                          bin_col: str='',
+                          result_col: str='',
+                          bin_order: list=[],
+                          max_result: float=0,
+                          largest_fontsize: int=17,
+                          distplot_xlim: list=[],
+                          swarm_ylim: list=[],
+                          distplot_xticks: list=[],
+                          mean_line: bool=True,
+                          median_line: bool=False,
+                          gridlines: bool=False):
 
     fig, ax1, ax2 = create_plot_objects()
 
@@ -31,7 +31,7 @@ def distribution_plot(df,
 
     bin_order = sorted({bin for bin in df.BINS}) if bin_order == [] else bin_order  # list of unique bins
 
-    swarmplot(df, ax1, bin_order=bin_order, max_result=max_result, swarmplot_ylim=swarmplot_ylim, mean_line=mean_line, median_line=median_line, gridlines=gridlines)
+    swarm(df, ax1, bin_order=bin_order, max_result=max_result, swarm_ylim=swarm_ylim, mean_line=mean_line, median_line=median_line, gridlines=gridlines)
 
     dist_data = []
     for bin in bin_order:
@@ -56,16 +56,16 @@ def distribution_plot(df,
     plt.show()
 
 
-def swarmplot(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize: int=17, swarmplot_ylim: list=[], mean_line: bool=True, median_line: bool=False, gridlines: bool=False):
-    '''Swarmplot on left side'''
+def swarm(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize: int=17, swarm_ylim: list=[], mean_line: bool=True, median_line: bool=False, gridlines: bool=False):
+    '''Swarm plot on left side'''
     sns.set_style('whitegrid')
     if max_result == 0:
-        ax.set_ylim([0, round(_get_upper_bound(df.RESULT.max()))])  # set ylim before plotting to ensure good swarmplot point spacing
+        ax.set_ylim([0, round(_get_upper_bound(df.RESULT.max()))])  # set ylim before plotting to ensure good swarm point spacing
         max_result = df.RESULT.max()
     else:
-        ax.set_ylim([0, max_result])  # set ylim before plotting to ensure good swarmplot point spacing
-    if swarmplot_ylim != []:
-        ax.set_ylim(swarmplot_ylim)
+        ax.set_ylim([0, max_result])  # set ylim before plotting to ensure good swarm point spacing
+    if swarm_ylim != []:
+        ax.set_ylim(swarm_ylim)
 
     point_size = 80 / (len(df) / len(set(df['BINS'])) + 15) ** 0.6
     ax = sns.swarmplot(x='BINS', y='RESULT', data=df, ax=ax, size=point_size, order=bin_order)

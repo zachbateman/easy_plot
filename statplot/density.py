@@ -1,12 +1,12 @@
 '''
-Python module for generating line plots.
+Python module for generating density plots.
 '''
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 
 
-def densityplot(df, xvar, categoryvar: str='', x_label: str='', y_label: str='', show_rug: bool=False, size_minmax: tuple=(50  , 300), alpha: float=0.9, title='Densityplot', largest_fontsize: int=17, xlog=False, major_gridlines=False, minor_gridlines=False, xlim=[], ylim=[]) -> None:
+def density(df, xvar, categoryvar: str='', x_label: str='', y_label: str='', show_rug: bool=False, size_minmax: tuple=(50  , 300), alpha: float=0.9, title='Densityplot', largest_fontsize: int=17, xlog=False, major_gridlines=False, minor_gridlines=False, xlim=[], ylim=[]) -> None:
     '''
     Display a density plot for the xvar arg (string or iterable of strings).
     '''

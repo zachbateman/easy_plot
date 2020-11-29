@@ -7,7 +7,7 @@ import pandas
 
 
 
-def lineplot(df, xvar: str='', yvar='', hue: str='', y_label: str='', size_minmax: tuple=(50  , 300), alpha: float=0.9, title='Lineplot', largest_fontsize: int=17, xlog=False, ylog=False, major_gridlines=False, minor_gridlines=False, xlim=[], ylim=[]) -> None:
+def line(df, xvar: str='', yvar='', hue: str='', y_label: str='', size_minmax: tuple=(50  , 300), alpha: float=0.9, title='Lineplot', largest_fontsize: int=17, xlog=False, ylog=False, major_gridlines=False, minor_gridlines=False, xlim=[], ylim=[]) -> None:
     '''
     Display a (very nicely formatted) line plot for the df arg.
     Can plot multiple lines if multiple columns are provided as a list for yvar.

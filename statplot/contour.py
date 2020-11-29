@@ -11,7 +11,7 @@ def default_label(z):
     return '{:,.1f}'.format(z)
 
 
-def contourplot(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', contour_levels=[], title='Surface Plot', bins=20, largest_fontsize: int=17, major_gridlines=False, minor_gridlines=False, xlim=[], ylim=[], xticks=[], yticks=[], xformat='', yformat='', label_format=default_label, colorbar=True) -> None:
+def contour(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', contour_levels=[], title='Surface Plot', bins=20, largest_fontsize: int=17, major_gridlines=False, minor_gridlines=False, xlim=[], ylim=[], xticks=[], yticks=[], xformat='', yformat='', label_format=default_label, colorbar=True) -> None:
     '''
     Display a contour plot of specified x, y and z columns
     "bins" arg is how many bins to be used in creating contours.

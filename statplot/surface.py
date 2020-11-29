@@ -1,14 +1,13 @@
 '''
-Python module for generating scatter plots.
+Python module for generating surface plots.
 '''
 import matplotlib
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-# import seaborn as sns
 import math
 
 
-def surfaceplot(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', title='Surface Plot', bins=20, minpoints=3, smooth=False, largest_fontsize: int=17, zero_minz=True) -> None:
+def surface(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', title='Surface Plot', bins=20, minpoints=3, smooth=False, largest_fontsize: int=17, zero_minz=True) -> None:
     '''
     Display a surface plot of specified x, y and z columns
     "bins" arg is how many bins to be used in averaging the points.
