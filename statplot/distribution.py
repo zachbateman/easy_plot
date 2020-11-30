@@ -67,11 +67,12 @@ def swarm(df, ax, bin_order: list=[], max_result: float=0, largest_fontsize: int
     if swarm_ylim != []:
         ax.set_ylim(swarm_ylim)
 
-    point_size = 80 / (len(df) / len(set(df['BINS'])) + 15) ** 0.6
+    num_bins = len(set(df['BINS']))
+    point_size = 80 / (len(df) / num_bins + 15) ** 0.6
     ax = sns.swarmplot(x='BINS', y='RESULT', data=df, ax=ax, size=point_size, order=bin_order)
     ax.tick_params(labelsize=10)
 
-    line_width = 0.6
+    line_width = 0.8 - 0.6 / num_bins
     for i, (tick, text) in enumerate(zip(ax.get_xticks(), ax.get_xticklabels())):
         mean = df[df.BINS == bin_order[i]]['RESULT'].mean()
         median = df[df.BINS == bin_order[i]]['RESULT'].median()

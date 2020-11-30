@@ -5,9 +5,10 @@ import matplotlib
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import math
+import matplotlib.animation as animation
 
 
-def surface(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', title='Surface Plot', bins=20, minpoints=3, smooth=False, largest_fontsize: int=17, zero_minz=True) -> None:
+def surface(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', title='Surface Plot', bins=20, minpoints=3, smooth=False, largest_fontsize: int=17, zero_minz=True, show_or_gif: str='show') -> None:
     '''
     Display a surface plot of specified x, y and z columns
     "bins" arg is how many bins to be used in averaging the points.
@@ -48,7 +49,13 @@ def surface(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', tit
 
     plt.suptitle(title, fontsize=largest_fontsize)
     plt.subplots_adjust(left=0.04, right=1.0, bottom=0.02, top=0.98)
-    plt.show()
+
+    if show_or_gif == 'gif':
+        rotate = lambda angle: ax.view_init(azim=angle, elev=15)
+        rot_animation = animation.FuncAnimation(fig, rotate, frames=list(range(-90, -2, 2)) + list(range(-2, -90, -2)), interval=100)
+        rot_animation.save('surfaceplot_rotation.gif', dpi=100)
+    else:
+        plt.show()
 
 
 def generate_3d_points(coordinates: list, bins: int=10, minpoints: int=7, smooth: bool=False) -> list:

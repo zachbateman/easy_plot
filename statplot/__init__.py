@@ -6,8 +6,7 @@ from .line import line
 from .density import density
 from .trend import trend
 from .surface import surface
-# from ._pca import pca_scree
 from .histogram import histogram
 from .contour import contour
+# from ._pca import pca_scree
 # from . import cleaning
-from .info import __doc__
