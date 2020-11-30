@@ -5,7 +5,8 @@ import statplot
 
 def test_func():
     df = pandas.read_csv('test_data.csv')
-    statplot.heatmap(df)
+    statplot.heatmap(df, cluster=False)
+    statplot.heatmap(df, cluster=True)
 
 
 
