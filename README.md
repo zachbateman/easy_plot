@@ -1,55 +1,55 @@
-# statplot
+# Statplot
 
-statplot is a Python package built to provide easy and fast production-quality visualizations of statistical data.
+Statplot is a Python package built to provide easy and fast production-quality visualizations of statistical data.
 Utilizes pandas dataframes as standard format for input data.
 
 # Current Features
 
-  - statplot.distribution_plot(df)
+  - statplot.distribution(df)
     - Plot a "Distribution Plot": a swarmplot alongside a cumulative probability plot.
     - Usage:
         ```sh
         import pandas
         import statplot
         df = pandas.read_csv('test.csv')
-        statplot.distribution_plot(df, bin_col='Weight', result_col='Value')
+        statplot.distribution(df, bin_col='Weight', result_col='Value')
         ```
     <img src="tests/images/distribution_plot_example.png" width="550px">
 
-  - statplot.scatterplot(df)
+  - statplot.scatter(df)
     - Plot a scatter plot.
     - Usage:
         ```sh
         import pandas
         import statplot
         df = pandas.read_csv('test.csv')
-        statplot.scatterplot(df, xvar='Value', yvar='Value_2', sizevar='Weight')
+        statplot.scatter(df, xvar='Value', yvar='Value_2', sizevar='Weight')
         ```
     <img src="tests/images/scatterplot_example.png" width="550px">
 
-  - statplot.scatterplot_matrix_plot(df)
-    - Plot a matrix of scatterplots.
+  - statplot.scatter_matrix(df)
+    - Plot a matrix of scatter plots.
     - Usage:
         ```sh
         import pandas
         import statplot
         df = pandas.read_csv('test.csv')
-        statplot.scatterplot_matrix_plot(df)
+        statplot.scatter_matrix(df)
         ```
     <img src="tests/images/scatterplot_matrix_example.png" width="550px">
 
-  - statplot.heatmap_plot(df)
+  - statplot.heatmap(df)
     - Plot a heatmap.
     - Usage:
         ```sh
         import pandas
         import statplot
         df = pandas.read_csv('test.csv')
-        statplot.heatmap_plot(df)
+        statplot.heatmap(df)
         ```
     <img src="tests/images/heatmap_example.png" width="550px">
 
 
 License
 ----
-TODO
+MIT
