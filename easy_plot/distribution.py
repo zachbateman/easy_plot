@@ -1,5 +1,5 @@
 '''
-Python module for generating statistical distribution plots.
+Python module for generating "distribution" plots.
 '''
 import matplotlib
 import matplotlib.pyplot as plt

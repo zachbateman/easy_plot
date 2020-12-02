@@ -1,12 +1,12 @@
 import pandas
 import sys
 sys.path.insert(1, '..')
-import statplot
+import easy_plot
 
 def test_func():
     df = pandas.read_csv('test_data.csv')
-    statplot.line(df, xvar='Weight', yvar=['Value', 'Value_2', 'Value_3'])
-    statplot.line(df, xvar='Value', yvar='Size', hue='Weight')
+    easy_plot.line(df, xvar='Weight', yvar=['Value', 'Value_2', 'Value_3'])
+    easy_plot.line(df, xvar='Value', yvar='Size', hue='Weight')
 
 
 

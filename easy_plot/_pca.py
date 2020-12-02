@@ -2,14 +2,14 @@
 Python module providing Principal Component Analysis capability.
 '''
 import sklearn.decomposition
-import statplot
+import easy_plot
 import numpy
 import matplotlib.pyplot as plt
 
 
 def pca_screeplot(df):
 
-    standardized_df = statplot.cleaning.standardize_df(df)
+    standardized_df = easy_plot.cleaning.standardize_df(df)
     pca = sklearn.decomposition.PCA().fit(standardized_df)
 
     y = numpy.std(pca.transform(standardized_df), axis=0) ** 2

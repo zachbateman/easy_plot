@@ -1,5 +1,5 @@
 '''
-Python module for generating statistical distribution plots.
+Python module for generating heatmap plots.
 '''
 import matplotlib.pyplot as plt
 import seaborn as sns

@@ -1,11 +1,11 @@
 import pandas
 import sys
 sys.path.insert(1, '..')
-import statplot
+import easy_plot
 
 def test_func():
     df = pandas.read_csv('test_data.csv')
-    statplot.scatter_matrix(df, title='Test Scatter Matrix')
+    easy_plot.scatter_matrix(df, title='Test Scatter Matrix')
 
 
 

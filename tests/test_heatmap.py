@@ -1,12 +1,12 @@
 import pandas
 import sys
 sys.path.insert(1, '..')
-import statplot
+import easy_plot
 
 def test_func():
     df = pandas.read_csv('test_data.csv')
-    statplot.heatmap(df, cluster=False)
-    statplot.heatmap(df, cluster=True)
+    easy_plot.heatmap(df, cluster=False)
+    easy_plot.heatmap(df, cluster=True)
 
 
 

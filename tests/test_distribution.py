@@ -1,11 +1,11 @@
 import pandas
 import sys
 sys.path.insert(1, '..')
-import statplot
+import easy_plot
 
 def test_func():
     df = pandas.read_csv('test_data.csv')
-    statplot.distribution(df, bin_col='Weight', result_col='Value', mean_line=True, median_line=True)
+    easy_plot.distribution(df, bin_col='Weight', result_col='Value', mean_line=True, median_line=True)
 
 
 
