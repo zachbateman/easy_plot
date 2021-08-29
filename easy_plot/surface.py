@@ -40,9 +40,35 @@ def surface(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', tit
     ax.set_ylabel(f'\n{yvar}', fontsize=0.7 * largest_fontsize, linespacing=3)
     ax.set_zlabel(f'\n{zvar}', fontsize=0.7 * largest_fontsize, linespacing=4)
 
-    ax.get_xaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.0f}'.format(n)))
-    ax.get_yaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.0f}'.format(n)))
-    ax.zaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.0f}'.format(n)))
+    x_range = max(x) - min(x)
+    if x_range > 5:
+        ax.get_xaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.0f}'.format(n)))
+    elif x_range > 0.5:
+        ax.get_xaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.1f}'.format(n)))
+    elif x_range > 0.05:
+        ax.get_xaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.2f}'.format(n)))
+    else:
+        ax.get_xaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.3f}'.format(n)))
+
+    y_range = max(y) - min(y)
+    if y_range > 5:
+        ax.get_yaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.0f}'.format(n)))
+    elif y_range > 0.5:
+        ax.get_yaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.1f}'.format(n)))
+    elif y_range > 0.05:
+        ax.get_yaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.2f}'.format(n)))
+    else:
+        ax.get_yaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.3f}'.format(n)))
+
+    z_range = max(z) - min(z)
+    if z_range > 5:
+        ax.zaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.0f}'.format(n)))
+    elif z_range > 0.5:
+        ax.zaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.1f}'.format(n)))
+    elif z_range > 0.05:
+        ax.zaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.2f}'.format(n)))
+    else:
+        ax.zaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.3f}'.format(n)))
 
     if zero_minz:
         ax.set_zlim(bottom=0)

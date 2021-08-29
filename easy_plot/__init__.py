@@ -10,3 +10,5 @@ from .histogram import histogram
 from .contour import contour
 # from ._pca import pca_scree
 # from . import cleaning
+
+from .main import load, plot

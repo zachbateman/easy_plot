@@ -18,7 +18,7 @@ def trend(df, xvar: str='', yvar: str='', binvar: str='', alpha: float=0.25, tit
     groups = set(df[binvar].tolist())
     for group in groups:
         fil = df[df[binvar] == group]
-        ax = sns.lineplot(data=fil, **lplot_kwargs, alpha=alpha, legend=False)
+        ax = sns.lineplot(data=fil, **lplot_kwargs, alpha=alpha, legend='full')
 
     # Calculate and plot average curve ###############################
     sum_curve = []
