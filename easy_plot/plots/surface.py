@@ -8,7 +8,7 @@ import math
 import matplotlib.animation as animation
 
 
-def surface(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', title='Surface Plot', bins=20, minpoints=3, smooth=False, largest_fontsize: int=17, zero_minz=True, show_or_gif: str='show') -> None:
+def surface(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', title='Surface Plot', bins=10, minpoints=2, smooth=False, largest_fontsize: int=17, zero_minz=True, show_or_gif: str='show') -> None:
     '''
     Display a surface plot of specified x, y and z columns
     "bins" arg is how many bins to be used in averaging the points.
@@ -18,13 +18,16 @@ def surface(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', tit
     x = df[xvar].tolist()
     y = df[yvar].tolist()
     z = df[zvar].tolist()
-    plot_x, plot_y, plot_z = zip(*generate_3d_points(list(zip(x, y, z)), bins, minpoints, smooth))
 
     fig = plt.figure()
-    ax = fig.gca(projection='3d')
+    ax = fig.add_subplot(projection='3d')
 
-    surf = ax.plot_trisurf(plot_x, plot_y, plot_z, cmap=plt.cm.viridis, linewidth=0.5, alpha=0.9)
-    fig.colorbar(surf, shrink=0.5, aspect=5)
+    # Try to plot a surface, but pass if there are not enough points to average
+    if surface_points := generate_3d_points(list(zip(x, y, z)), bins, minpoints, smooth):
+        plot_x, plot_y, plot_z = zip(*surface_points)
+        if len(plot_x) > 2:  # Must have at least 3 points to plot a surface
+            surf = ax.plot_trisurf(plot_x, plot_y, plot_z, cmap=plt.cm.viridis, linewidth=0.5, alpha=0.9)
+            fig.colorbar(surf, shrink=0.5, aspect=5)
 
     if len(scatter_sub_df) > 0:
         sub_x = scatter_sub_df[xvar].tolist()
@@ -40,9 +43,35 @@ def surface(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', tit
     ax.set_ylabel(f'\n{yvar}', fontsize=0.7 * largest_fontsize, linespacing=3)
     ax.set_zlabel(f'\n{zvar}', fontsize=0.7 * largest_fontsize, linespacing=4)
 
-    ax.get_xaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.0f}'.format(n)))
-    ax.get_yaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.0f}'.format(n)))
-    ax.zaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.0f}'.format(n)))
+    x_range = max(x) - min(x)
+    if x_range > 5:
+        ax.get_xaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.0f}'.format(n)))
+    elif x_range > 0.5:
+        ax.get_xaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.1f}'.format(n)))
+    elif x_range > 0.05:
+        ax.get_xaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.2f}'.format(n)))
+    else:
+        ax.get_xaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.3f}'.format(n)))
+
+    y_range = max(y) - min(y)
+    if y_range > 5:
+        ax.get_yaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.0f}'.format(n)))
+    elif y_range > 0.5:
+        ax.get_yaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.1f}'.format(n)))
+    elif y_range > 0.05:
+        ax.get_yaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.2f}'.format(n)))
+    else:
+        ax.get_yaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.3f}'.format(n)))
+
+    z_range = max(z) - min(z)
+    if z_range > 5:
+        ax.zaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.0f}'.format(n)))
+    elif z_range > 0.5:
+        ax.zaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.1f}'.format(n)))
+    elif z_range > 0.05:
+        ax.zaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.2f}'.format(n)))
+    else:
+        ax.zaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda n, p: '{:,.3f}'.format(n)))
 
     if zero_minz:
         ax.set_zlim(bottom=0)
