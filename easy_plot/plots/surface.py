@@ -8,7 +8,7 @@ import math
 import matplotlib.animation as animation
 
 
-def surface(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', title='Surface Plot', bins=20, minpoints=3, smooth=False, largest_fontsize: int=17, zero_minz=True, show_or_gif: str='show') -> None:
+def surface(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', title='Surface Plot', bins=10, minpoints=2, smooth=False, largest_fontsize: int=17, zero_minz=True, show_or_gif: str='show') -> None:
     '''
     Display a surface plot of specified x, y and z columns
     "bins" arg is how many bins to be used in averaging the points.
@@ -18,13 +18,16 @@ def surface(df, scatter_sub_df='', xvar: str='', yvar: str='', zvar: str='', tit
     x = df[xvar].tolist()
     y = df[yvar].tolist()
     z = df[zvar].tolist()
-    plot_x, plot_y, plot_z = zip(*generate_3d_points(list(zip(x, y, z)), bins, minpoints, smooth))
 
     fig = plt.figure()
-    ax = fig.gca(projection='3d')
+    ax = fig.add_subplot(projection='3d')
 
-    surf = ax.plot_trisurf(plot_x, plot_y, plot_z, cmap=plt.cm.viridis, linewidth=0.5, alpha=0.9)
-    fig.colorbar(surf, shrink=0.5, aspect=5)
+    # Try to plot a surface, but pass if there are not enough points to average
+    if surface_points := generate_3d_points(list(zip(x, y, z)), bins, minpoints, smooth):
+        plot_x, plot_y, plot_z = zip(*surface_points)
+        if len(plot_x) > 2:  # Must have at least 3 points to plot a surface
+            surf = ax.plot_trisurf(plot_x, plot_y, plot_z, cmap=plt.cm.viridis, linewidth=0.5, alpha=0.9)
+            fig.colorbar(surf, shrink=0.5, aspect=5)
 
     if len(scatter_sub_df) > 0:
         sub_x = scatter_sub_df[xvar].tolist()
